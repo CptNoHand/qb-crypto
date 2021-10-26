@@ -17,6 +17,13 @@ local function RefreshCrypto()
     end
 end
 
+AddEventHandler('onResourceStart', function(resourceName)
+    if (GetCurrentResourceName() == resourceName) then
+        Citizen.Wait(200)
+        RefreshCrypto()
+    end
+end)
+
 local function HandlePriceChance()
     local currentValue = Crypto.Worth[coin]
     local prevValue = Crypto.Worth[coin]
