@@ -212,25 +212,6 @@ QBCore.Functions.CreateCallback('qb-crypto:server:GetCryptoData', function(sourc
     cb(CryptoData)
 end)
 
-QBCore.Functions.CreateCallback('qb-crypto:server:BuyCrypto', function(source, cb, data)
-    local Player = QBCore.Functions.GetPlayer(source)
-
-    if Player.PlayerData.money.bank >= tonumber(data.Price) then
-        local CryptoData = {
-            History = Crypto.History["qbit"],
-            Worth = Crypto.Worth["qbit"],
-            Portfolio = Player.PlayerData.money.crypto + tonumber(data.Coins),
-            WalletId = Player.PlayerData.metadata["walletid"],
-        }
-        Player.Functions.RemoveMoney('bank', tonumber(data.Price))
-        TriggerClientEvent('qb-phone:client:AddTransaction', source, Player, data, "You have "..tonumber(data.Coins).." Qbit('s) purchased!", "Credit")
-        Player.Functions.AddMoney('crypto', tonumber(data.Coins))
-        cb(CryptoData)
-    else
-        cb(false)
-    end
-end)
-
 QBCore.Functions.CreateCallback('qb-crypto:server:SellCrypto', function(source, cb, data)
     local Player = QBCore.Functions.GetPlayer(source)
 
