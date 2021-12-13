@@ -21,6 +21,19 @@ AddEventHandler('onResourceStart', function(resourceName)
     if (GetCurrentResourceName() == resourceName) then
         Citizen.Wait(200)
         RefreshCrypto()
+        local function GetTickerPrice()
+            local ticker_promise = promise.new()
+            PerformHttpRequest("https://min-api.cryptocompare.com/data/price?fsym=" .. Ticker.coin .. "&tsyms=" .. Ticker.currency, function(Error, Result, Head)
+                ticker_promise:resolve(Result)
+            end, 'GET')
+            Citizen.Await(ticker_promise)
+            local data = json.decode(ticker_promise.value)
+            if data and not data['Response'] then
+                return data[Ticker.currency]
+            else
+                return '\27[31m[ERROR]: Error me no worky\27[0m'
+            end
+        end
     end
 end)
 
@@ -62,6 +75,19 @@ local function HandlePriceChance()
         ['history'] = json.encode(Crypto.History[coin]),
     })
     RefreshCrypto()
+    local function GetTickerPrice()
+        local ticker_promise = promise.new()
+        PerformHttpRequest("https://min-api.cryptocompare.com/data/price?fsym=" .. Ticker.coin .. "&tsyms=" .. Ticker.currency, function(Error, Result, Head)
+            ticker_promise:resolve(Result)
+        end, 'GET')
+        Citizen.Await(ticker_promise)
+        local data = json.decode(ticker_promise.value)
+        if data and not data['Response'] then
+            return data[Ticker.currency]
+        else
+            return '\27[31m[ERROR]: Error me no worky\27[0m'
+        end
+    end
 end
 
 -- Commands
@@ -281,3 +307,22 @@ CreateThread(function()
         HandlePriceChance()
     end
 end)
+
+if Ticker.Enabled then
+    Citizen.CreateThread(function()
+        Interval = Ticker.tick_time * 60000
+        if Ticker.tick_time < 2 then
+            Interval = 120000
+        end
+        while(true) do
+            local get_coin_price = GetTickerPrice()
+            if type(get_coin_price) == 'number' then
+                Crypto.Worth["qbit"] = get_coin_price
+            else
+                Ticker.Enabled = false
+                break
+            end
+            Citizen.Wait(Interval)
+        end
+    end)
+end
