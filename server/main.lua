@@ -17,23 +17,24 @@ local function RefreshCrypto()
     end
 end
 
+local function GetTickerPrice()
+    local ticker_promise = promise.new()
+    PerformHttpRequest("https://min-api.cryptocompare.com/data/price?fsym=" .. Ticker.coin .. "&tsyms=" .. Ticker.currency, function(Error, Result, Head)
+        ticker_promise:resolve(Result)
+    end, 'GET')
+    Citizen.Await(ticker_promise)
+    local data = json.decode(ticker_promise.value)
+    if data and not data['Response'] then
+        return data[Ticker.currency]
+    else
+        return '\27[31m[ERROR]: Error me no worky\27[0m'
+    end
+end
+
 AddEventHandler('onResourceStart', function(resourceName)
     if (GetCurrentResourceName() == resourceName) then
         Citizen.Wait(200)
         RefreshCrypto()
-        local function GetTickerPrice()
-            local ticker_promise = promise.new()
-            PerformHttpRequest("https://min-api.cryptocompare.com/data/price?fsym=" .. Ticker.coin .. "&tsyms=" .. Ticker.currency, function(Error, Result, Head)
-                ticker_promise:resolve(Result)
-            end, 'GET')
-            Citizen.Await(ticker_promise)
-            local data = json.decode(ticker_promise.value)
-            if data and not data['Response'] then
-                return data[Ticker.currency]
-            else
-                return '\27[31m[ERROR]: Error me no worky\27[0m'
-            end
-        end
     end
 end)
 
@@ -75,19 +76,6 @@ local function HandlePriceChance()
         ['history'] = json.encode(Crypto.History[coin]),
     })
     RefreshCrypto()
-    local function GetTickerPrice()
-        local ticker_promise = promise.new()
-        PerformHttpRequest("https://min-api.cryptocompare.com/data/price?fsym=" .. Ticker.coin .. "&tsyms=" .. Ticker.currency, function(Error, Result, Head)
-            ticker_promise:resolve(Result)
-        end, 'GET')
-        Citizen.Await(ticker_promise)
-        local data = json.decode(ticker_promise.value)
-        if data and not data['Response'] then
-            return data[Ticker.currency]
-        else
-            return '\27[31m[ERROR]: Error me no worky\27[0m'
-        end
-    end
 end
 
 -- Commands
