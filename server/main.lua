@@ -204,7 +204,7 @@ RegisterServerEvent('qb-crypto:server:ExchangeSuccess', function(LuckChance)
         local DeelNumber = 1000000
         local Amount = (math.random(111111, 199999) / DeelNumber)
         if LuckChance == LuckyNumber then
-            Amount = (math.random(199999, 299999) / DeelNumber)
+            Amount = (math.random(199999, 366666) / DeelNumber)
         end
 
         Player.Functions.RemoveItem("cryptostick", 1)
