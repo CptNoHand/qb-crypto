@@ -13,7 +13,7 @@ Crypto = {
     },
 
     Exchange = {
-        coords = vector3(1276.21, -1709.88, 54.57),
+        coords = vector3(707.33, -966.9, 30.41),
         RebootInfo = {
             state = false,
             percentage = 0
