@@ -41,7 +41,7 @@ Ticker = {
     Enabled = true, -- Decide whether the real life price ticker should be enabled or not :)  
     coin = 'ETH', --- The coin, please make sure you find the actual name, for example: Bitcoin vs BTC, BTC would be correct
     currency = 'USD', -- For example USD, NOK, SEK, EUR, CAD and more here https://www.countries-ofthe-world.com/world-currencies.html
-    tick_time = 15, --- Minutes (Minimum is 2 minutes) 20,160 Requests a month, Its recommended to get the free API key so the crypto script doesnt switch on and off if ratelimit is encountered
+    tick_time = 10, --- Minutes (Minimum is 2 minutes) 20,160 Requests a month, Its recommended to get the free API key so the crypto script doesnt switch on and off if ratelimit is encountered
     Api_key = '538aa9f6dc60324de2ed33595c383a21759c7e2ef00526ff7763705af0a1f8e9', -- If you decide to get an api key for the API (https://min-api.cryptocompare.com/pricing) The free plan should be more than enough for 1 Fivem server
     --- Error handle stuff, for more user friendly and readable errors, Don't touch.
     Error_handle = {
